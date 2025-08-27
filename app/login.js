@@ -1,32 +1,39 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import RegexValidation from '../utils/RegexValidator';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import { useRouter } from "expo-router";
+import RegexValidation from "../utils/RegexValidator";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const router = useRouter();
 
   const validateCredentials = (emailText, passwordText) => {
     if (!emailText) {
-      setEmailError('Email é obrigatório');
+      setEmailError("Email é obrigatório");
       return false;
     }
     if (!RegexValidation.emailValidator.test(emailText)) {
-      setEmailError('Digite um email válido');
+      setEmailError("Digite um email válido");
       return false;
     }
 
     if (!passwordText) {
-      setPasswordError('Senha é obrigatória');
+      setPasswordError("Senha é obrigatória");
       return false;
     }
 
-    setEmailError('');
-    setPasswordError('');
+    setEmailError("");
+    setPasswordError("");
     return true;
   };
 
@@ -34,7 +41,7 @@ export default function LoginScreen() {
     setEmail(text);
     // Limpar erro assim que o usuário começar a digitar
     if (emailError) {
-      setEmailError('');
+      setEmailError("");
     }
   };
 
@@ -42,17 +49,17 @@ export default function LoginScreen() {
     setPassword(text);
     // Limpar erro assim que o usuário começar a digitar
     if (passwordError) {
-      setPasswordError('');
+      setPasswordError("");
     }
   };
 
   const handleLogin = () => {
     // Validar email antes de fazer login
-    if (!validateCredentials(email)) {
+    if (!validateCredentials(email, password)) {
       return;
     }
 
-    router.push('/home');
+    router.push("/home");
   };
 
   return (
@@ -74,11 +81,10 @@ export default function LoginScreen() {
         onChangeText={handlePasswordChange}
         secureTextEntry
       />
-      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-      <TouchableOpacity 
-        style={[styles.button]} 
-        onPress={handleLogin}
-      >
+      {passwordError ? (
+        <Text style={styles.errorText}>{passwordError}</Text>
+      ) : null}
+      <TouchableOpacity style={[styles.button]} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
     </View>
@@ -88,20 +94,20 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
     padding: 16,
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 32,
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 16,
@@ -109,31 +115,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputError: {
-    borderColor: '#ff4444',
+    borderColor: "#ff4444",
     borderWidth: 2,
   },
   errorText: {
-    color: '#ff4444',
+    color: "#ff4444",
     fontSize: 14,
     marginBottom: 16,
-    width: '100%',
-    textAlign: 'left',
+    width: "100%",
+    textAlign: "left",
   },
   button: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 16,
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
