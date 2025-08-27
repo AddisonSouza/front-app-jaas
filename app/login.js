@@ -17,6 +17,7 @@ export default function LoginScreen() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState(""); // Novo estado para erros de autenticação
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar senha
   const router = useRouter();
 
   const validateCredentials = (emailText, passwordText) => {
@@ -41,7 +42,6 @@ export default function LoginScreen() {
 
   const handleEmailChange = (text) => {
     setEmail(text);
-    // Limpar erros assim que o usuário começar a digitar
     if (emailError) {
       setEmailError("");
     }
@@ -52,7 +52,6 @@ export default function LoginScreen() {
 
   const handlePasswordChange = (text) => {
     setPassword(text);
-    // Limpar erros assim que o usuário começar a digitar
     if (passwordError) {
       setPasswordError("");
     }
@@ -62,24 +61,19 @@ export default function LoginScreen() {
   };
 
   const handleLogin = () => {
-    // Limpar erros anteriores
     setLoginError("");
     
-    // Validar campos obrigatórios e formato
     if (!validateCredentials(email, password)) {
       return;
     }
 
-    // Validar credenciais usando a classe Credenciais
     const resultado = Credenciais.validarCredenciais(email, password);
     
     if (!resultado.sucesso) {
-      // Mostrar erro de autenticação na tela
       setLoginError(resultado.mensagem);
       return;
     }
 
-    // Login bem-sucedido
     console.log("Login realizado com sucesso:", resultado.usuario);
     router.push("/home");
   };
@@ -88,7 +82,6 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Monitoramento Jaas</Text>
       
-      {/* Aviso de erro de autenticação */}
       {loginError ? (
         <View style={styles.loginErrorContainer}>
           <Text style={styles.loginErrorText}>⚠️ {loginError}</Text>
@@ -105,13 +98,22 @@ export default function LoginScreen() {
       />
       {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
       
-      <TextInput
-        style={[styles.input, passwordError ? styles.inputError : null]}
-        placeholder="Senha"
-        value={password}
-        onChangeText={handlePasswordChange}
-        secureTextEntry
-      />
+      {/* Campo Senha */}
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={[styles.passwordInput, passwordError ? styles.inputError : null]}
+          placeholder="Senha"
+          value={password}
+          onChangeText={handlePasswordChange}
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity 
+          style={styles.eyeButton} 
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Text style={styles.eyeText}>{showPassword ? "Ocultar" : "Mostrar"}</Text>
+        </TouchableOpacity>
+      </View>
       {passwordError ? (
         <Text style={styles.errorText}>{passwordError}</Text>
       ) : null}
@@ -119,6 +121,13 @@ export default function LoginScreen() {
       <TouchableOpacity style={[styles.button]} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
+      
+      <View style={styles.cadastroLinkContainer}>
+        <Text style={styles.cadastroLinkText}>Não tem uma conta? </Text>
+        <TouchableOpacity onPress={() => router.push('/cadastro')}>
+          <Text style={styles.cadastroLink}>Criar conta</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -161,6 +170,37 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 16,
   },
+  passwordContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    position: "relative",
+  },
+  passwordInput: {
+    flex: 1,
+    height: 50,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingRight: 50,
+    fontSize: 16,
+    backgroundColor: "#fff",
+  },
+  eyeButton: {
+    position: "absolute",
+    right: 15,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 50,
+  },
+  eyeText: {
+    fontSize: 12,
+    color: "#007bff",
+    fontWeight: "500",
+  },
   inputError: {
     borderColor: "#ff4444",
     borderWidth: 2,
@@ -189,8 +229,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  cadastroLinkContainer: {
+    flexDirection: "row",
+    marginTop: 24,
+    marginBottom: 16,
+  },
+  cadastroLinkText: {
+    fontSize: 16,
+    color: "#666",
+  },
+  cadastroLink: {
+    fontSize: 16,
+    color: "#007bff",
+    fontWeight: "bold",
+  },
   hintContainer: {
-    marginTop: 32,
+    marginTop: 16,
     padding: 16,
     backgroundColor: "#f5f5f5",
     borderRadius: 8,

@@ -24,10 +24,8 @@ export default class Credenciais {
    * @returns {Object} - Resultado da validação
    */
   static validarCredenciais(email, senha) {
-    // Buscar usuário pelo email
     const usuario = this.usuarios.find(user => user.email.toLowerCase() === email.toLowerCase());
 
-    // Verificar se usuário existe
     if (!usuario) {
       return {
         sucesso: false,
@@ -36,7 +34,6 @@ export default class Credenciais {
       };
     }
 
-    // Verificar se a senha está correta
     if (usuario.senha !== senha) {
       return {
         sucesso: false,
@@ -70,5 +67,39 @@ export default class Credenciais {
    */
   static obterEmailsValidos() {
     return this.usuarios.map(user => user.email);
+  }
+
+  /**
+   * Cadastrar novo usuário
+   * @param {string} email - Email do usuário
+   * @param {string} senha - Senha do usuário
+   * @param {string} nome - Nome do usuário (opcional)
+   * @returns {Object} - Resultado do cadastro
+   */
+  static cadastrarUsuario(email, senha, nome = "Usuário") {
+    if (this.emailExiste(email)) {
+      return {
+        sucesso: false,
+        erro: "emailJaExiste",
+        mensagem: "Este email já está cadastrado"
+      };
+    }
+
+    const novoUsuario = {
+      email: email.toLowerCase(),
+      senha: senha,
+      nome: nome
+    };
+
+    this.usuarios.push(novoUsuario);
+
+    return {
+      sucesso: true,
+      usuario: {
+        email: novoUsuario.email,
+        nome: novoUsuario.nome
+      },
+      mensagem: "Usuário cadastrado com sucesso!"
+    };
   }
 }

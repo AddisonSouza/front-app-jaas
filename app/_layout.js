@@ -9,8 +9,9 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="login"
+        initialRouteName="cadastro"
       >
+        <Stack.Screen name="cadastro" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="home" options={{ headerShown: false }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />
